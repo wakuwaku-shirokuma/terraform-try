@@ -1,2 +1,2 @@
 # terraform-try
-terraformのによるAWSのネットワーク構築を試しにやってみるものです。
+terraformによるAWSのネットワーク構築を試しにやってみるものです。
