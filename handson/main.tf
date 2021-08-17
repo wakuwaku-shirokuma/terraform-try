@@ -351,3 +351,9 @@ resource "aws_ecs_task_definition" "main" {
 ]
 EOL
 }
+
+# ECS Cluster
+# https://www.terraform.io/docs/providers/aws/r/ecs_cluster.html
+resource "aws_ecs_cluster" "main" {
+  name = "handson"
+}
