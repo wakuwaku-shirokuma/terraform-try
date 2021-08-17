@@ -357,3 +357,43 @@ EOL
 resource "aws_ecs_cluster" "main" {
   name = "handson"
 }
+
+# ELB Target Group
+# https://www.terraform.io/docs/providers/aws/r/lb_target_group.html
+resource "aws_lb_target_group" "main" {
+  name = "handson"
+
+  # ターゲットグループを作成するVPC
+  vpc_id = "${aws_vpc.main.id}"
+
+  # ALBからECSタスクのコンテナへトラフィックを振り分ける設定
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+
+  # コンテナへの死活監視設定
+  health_check {
+    port = 80
+    path = "/"
+  }  
+}
+
+# ALB Listener Rule
+# https://www.terraform.io/docs/providers/aws/r/lb_listener_rule.html
+resource "aws_lb_listener_rule" "main" {
+  # ルールを追加するリスナー
+  listener_arn = "${aws_lb_listener.main.arn}"
+
+  # 受け取ったトラフィックをターゲットグループへ受け渡す
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.main.id}"
+  }
+
+  # ターゲットグループへ受け渡すトラフィックの条件
+  condition {
+    path_pattern {
+      values = ["*"]
+    }
+  }
+}
